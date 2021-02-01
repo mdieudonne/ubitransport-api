@@ -4,12 +4,16 @@ namespace App\Entity;
 
 use App\Repository\ScoreRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ScoreRepository::class)
  */
 class Score
 {
+    const MIN_VALUE = 0;
+    const MAX_VALUE = 20;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -19,6 +23,10 @@ class Score
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Range(
+     *   min = self::MIN_VALUE,
+     *   max = self::MAX_VALUE,
+     * )
      */
     private $value;
 
