@@ -17,27 +17,27 @@ class Student
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $lastname;
+    private string $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $firstname;
+    private string $firstname;
 
     /**
      * @ORM\Column(type="date")
      */
-    private $birthdate;
+    private \DateTime $birthdate;
 
     /**
      * @ORM\OneToMany(targetEntity=Score::class, mappedBy="student", orphanRemoval=true)
      */
-    private $scores;
+    private ArrayCollection $scores;
 
     public function __construct()
     {
@@ -73,12 +73,12 @@ class Student
         return $this;
     }
 
-    public function getBirthdate(): ?\DateTimeInterface
+    public function getBirthdate(): ?\DateTime
     {
         return $this->birthdate;
     }
 
-    public function setBirthdate(\DateTimeInterface $birthdate): self
+    public function setBirthdate(\DateTime $birthdate): self
     {
         $this->birthdate = $birthdate;
 

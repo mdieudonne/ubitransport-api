@@ -19,7 +19,7 @@ class Score
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="float")
@@ -28,18 +28,18 @@ class Score
      *   max = self::MAX_VALUE,
      * )
      */
-    private $value;
+    private float $value;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $subject;
+    private string $subject;
 
     /**
      * @ORM\ManyToOne(targetEntity=Student::class, inversedBy="scores")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $student;
+    private Student $student;
 
     public function getId(): ?int
     {
@@ -75,7 +75,7 @@ class Score
         return $this->student;
     }
 
-    public function setStudent(?Student $student): self
+    public function setStudent(Student $student): self
     {
         $this->student = $student;
 
