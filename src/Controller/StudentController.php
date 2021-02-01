@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Student;
-use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use StudentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,21 +20,14 @@ class StudentController extends AbstractController
    * )
    *
    * @param Request $request
-   * @param EntityManagerInterface $em
+   * @param StudentService $studentService
    * @return JsonResponse
-   * @throws \Exception
    */
-  public function addStudent(Request $request, EntityManagerInterface $em): JsonResponse
+  public function addStudent(Request $request, StudentService $studentService): JsonResponse
   {
     $data = json_decode($request->getContent(), true);
 
-    $student = new Student();
-    $student->setFirstname($data['firstname']);
-    $student->setLastname($data['lastname']);
-    $student->setBirthdate(new \DateTime($data['birthdate']));
-
-    $em->persist($student);
-    $em->flush();
+    $student = $studentService->add($data);
 
     return new JsonResponse($student, Response::HTTP_CREATED);
   }
@@ -47,21 +40,17 @@ class StudentController extends AbstractController
    * )
    *
    * @param Request $request
-   * @param EntityManagerInterface $em
+   * @param StudentService $studentService
    * @param int $id
    * @return JsonResponse
-   * @throws \Exception
+   * @throws Exception
    */
-  public function updateStudent(Request $request, EntityManagerInterface $em, int $id): JsonResponse
+  public function updateStudent(Request $request, StudentService $studentService, int $id): JsonResponse
   {
     $data = json_decode($request->getContent(), true);
 
-    $student = $em->getRepository(Student::class)->find($id);
-    $student->setFirstname($data['firstname']);
-    $student->setLastname($data['lastname']);
-    $student->setBirthdate(new \DateTime($data['birthdate']));
+    $student = $studentService->update($data, $id);
 
-    $em->flush();
     return new JsonResponse($student, Response::HTTP_OK);
   }
 
@@ -73,18 +62,17 @@ class StudentController extends AbstractController
    * )
    *
    * @param Request $request
-   * @param EntityManagerInterface $em
+   * @param StudentService $studentService
    * @param int $id
    * @return Response
    */
-  public function deleteStudent(Request $request, EntityManagerInterface $em, int $id): Response
+  public function deleteStudent(Request $request, StudentService $studentService, int $id): Response
   {
-    $student = $em->getRepository(Student::class)->find($id);
-    $em->remove($student);
-    $em->flush();
+    $studentService->delete($id);
 
     $response = new Response();
     $response->setStatusCode(Response::HTTP_NO_CONTENT);
+
     return $response;
   }
 }

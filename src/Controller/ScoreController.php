@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Score;
-use App\Entity\Student;
-use Doctrine\ORM\EntityManagerInterface;
+use StudentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,22 +19,14 @@ class ScoreController extends AbstractController
    * )
    *
    * @param Request $request
+   * @param StudentService $studentService
    * @return JsonResponse
    */
-  public function addScore(Request $request, EntityManagerInterface $em): JsonResponse
+  public function addScore(Request $request, StudentService $studentService): JsonResponse
   {
     $data = json_decode($request->getContent(), true);
 
-    $score = new Score();
-    $score->setValue($data['value']);
-    $score->setSubject($data['subject']);
-
-    /** @var Student $student */
-    $student = $em->getRepository(Student::class)->find($data['id_student']);
-    $score->setStudent($student);
-
-    $em->persist($score);
-    $em->flush();
+    $student = $studentService->add($data);
 
     return new JsonResponse($student, Response::HTTP_CREATED);
   }

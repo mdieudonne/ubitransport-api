@@ -11,74 +11,74 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Score
 {
-    const MIN_VALUE = 0;
-    const MAX_VALUE = 20;
+  const MIN_VALUE = 0;
+  const MAX_VALUE = 20;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\Column(type="integer")
-     */
-    private int $id;
+  /**
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   * @ORM\Column(type="integer")
+   */
+  private int $id;
 
-    /**
-     * @ORM\Column(type="float")
-     * @Assert\Range(
-     *   min = self::MIN_VALUE,
-     *   max = self::MAX_VALUE,
-     * )
-     */
-    private float $value;
+  /**
+   * @ORM\Column(type="float")
+   * @Assert\Range(
+   *   min = self::MIN_VALUE,
+   *   max = self::MAX_VALUE,
+   * )
+   */
+  private float $value;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private string $subject;
+  /**
+   * @ORM\Column(type="string", length=255)
+   */
+  private string $subject;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Student::class, inversedBy="scores")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private Student $student;
+  /**
+   * @ORM\ManyToOne(targetEntity=Student::class, inversedBy="scores")
+   * @ORM\JoinColumn(nullable=false)
+   */
+  private Student $student;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+  public function getId(): ?int
+  {
+    return $this->id;
+  }
 
-    public function getValue(): ?float
-    {
-        return $this->value;
-    }
+  public function getValue(): ?float
+  {
+    return $this->value;
+  }
 
-    public function setValue(float $value): self
-    {
-        $this->value = $value;
+  public function setValue(float $value): self
+  {
+    $this->value = $value;
 
-        return $this;
-    }
+    return $this;
+  }
 
-    public function getSubject(): ?string
-    {
-        return $this->subject;
-    }
+  public function getSubject(): ?string
+  {
+    return $this->subject;
+  }
 
-    public function setSubject(string $subject): self
-    {
-        $this->subject = $subject;
+  public function setSubject(string $subject): self
+  {
+    $this->subject = $subject;
 
-        return $this;
-    }
+    return $this;
+  }
 
-    public function getStudent(): ?Student
-    {
-        return $this->student;
-    }
+  public function getStudent(): ?Student
+  {
+    return $this->student;
+  }
 
-    public function setStudent(Student $student): self
-    {
-        $this->student = $student;
+  public function setStudent(Student $student): self
+  {
+    $this->student = $student;
 
-        return $this;
-    }
+    return $this;
+  }
 }
