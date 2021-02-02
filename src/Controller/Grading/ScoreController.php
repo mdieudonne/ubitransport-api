@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Grading;
 
-use StudentService;
+use App\Core\ApiError;
+use App\Core\ApiErrorException;
+use App\Services\Grading\StudentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +27,11 @@ class ScoreController extends AbstractController
   public function addScore(Request $request, StudentService $studentService): JsonResponse
   {
     $data = json_decode($request->getContent(), true);
+
+    if ($data === null) {
+      $error = new ApiError(400, ApiError::TYPE_INVALID_REQUEST_BODY_FORMAT);
+      throw new ApiErrorException($error);
+    }
 
     $student = $studentService->add($data);
 
