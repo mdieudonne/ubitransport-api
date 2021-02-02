@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Grading;
 
-use App\Repository\ScoreRepository;
+use App\Repository\Grading\ScoreRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ScoreRepository::class)
+ * @ORM\Table(name="score",schema="grading")
  */
 class Score
 {
