@@ -47,4 +47,21 @@ class StudentRepository extends ServiceEntityRepository
         ;
     }
     */
+
+  public function countAll() {
+    return $this->createQueryBuilder('s')
+      ->select('COUNT(s)')
+      ->getQuery()
+      ->getSingleScalarResult();
+  }
+
+
+  public function findByBatch($limit, $offset)
+  {
+    return $this->createQueryBuilder('s')
+      ->setMaxResults($limit)
+      ->setFirstResult($offset)
+      ->getQuery()
+      ->getResult();
+  }
 }

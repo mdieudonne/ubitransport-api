@@ -16,6 +16,28 @@ class StudentService
     $this->em = $em;
   }
 
+  public function getByPage(array $data): array
+  {
+
+    $totalStudents = $this->em->getRepository(Student::class)->countAll();
+    $limit = $data['itemsPerPage'];
+    $page = $data['page'];
+    $offset = 0;
+
+    $students = $this->em->getRepository(Student::class)->findByBatch($limit, $offset);
+
+    if (empty($student)) {
+      $error = new ApiError(422, ApiError::PAGE_NOT_FOUND);
+      throw new ApiErrorException($error);
+    }
+
+    return [
+      'totalStudents' => $totalStudents,
+      'page' => $page,
+      'itemsPerPage' => $limit,
+    ];
+  }
+
   public function add(array $data): Student
   {
     $student = new Student();
@@ -29,6 +51,22 @@ class StudentService
     $this->em->flush();
 
     return $student;
+  }
+
+  private function validateRequestParams(array $data): ?array
+  {
+    if (empty($data['firstname'] || empty($data['lastname']) || empty($data['birthdate']))) {
+      $error = new ApiError(400, ApiError::MISSING_PARAM);
+      throw new ApiErrorException($error);
+    }
+
+    $birthdate = new \DateTime($data['birthdate']);
+    if (!$birthdate) {
+      $error = new ApiError(400, ApiError::INVALID_DATETIME);
+      throw new ApiErrorException($error);
+    }
+
+    return [$birthdate];
   }
 
   public function update(array $data, int $id): Student
@@ -61,22 +99,6 @@ class StudentService
 
     $this->em->remove($student);
     $this->em->flush();
-  }
-
-  private function validateRequestParams(array $data): ?array
-  {
-    if (empty($data['firstname'] || empty($data['lastname']) || empty($data['birthdate']))) {
-      $error = new ApiError(400, ApiError::MISSING_PARAM);
-      throw new ApiErrorException($error);
-    }
-
-    $birthdate = new \DateTime($data['birthdate']);
-    if (!$birthdate) {
-      $error = new ApiError(400, ApiError::INVALID_DATETIME);
-      throw new ApiErrorException($error);
-    }
-
-    return [$birthdate];
   }
 
 }

@@ -9,6 +9,7 @@ class ApiError
   const RESOURCE_NOT_FOUND = 'resource_not_found';
   const INVALID_DATETIME = 'invalid_datetime';
   const MISSING_PARAM = 'missing_params';
+  const PAGE_NOT_FOUND = 'page_not_found';
 
   private string $statusCode;
 
@@ -34,6 +35,7 @@ class ApiError
     self::RESOURCE_NOT_FOUND => 'Resource not found',
     self::INVALID_DATETIME => 'Invalid date-time, expected format YYYY-MM-DD',
     self::MISSING_PARAM => 'Missing mandatory parameter',
+    self::PAGE_NOT_FOUND => 'Page not found',
   );
 
   public function getStatusCode(): string

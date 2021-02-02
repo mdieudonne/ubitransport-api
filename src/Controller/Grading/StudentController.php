@@ -17,6 +17,31 @@ class StudentController extends AbstractController
   /**
    * @Route(
    *   "/api/students",
+   *   name="get_students",
+   *   methods={"GET"}
+   * )
+   *
+   * @param Request $request
+   * @param StudentService $studentService
+   * @return JsonResponse
+   */
+  public function getStudents(Request $request, StudentService $studentService): JsonResponse
+  {
+    $data = json_decode($request->getContent(), true);
+
+    if ($data === null) {
+      $error = new ApiError(400, ApiError::TYPE_INVALID_REQUEST_BODY_FORMAT);
+      throw new ApiErrorException($error);
+    }
+
+    $student = $studentService->getByPage($data);
+
+    return new JsonResponse($student, Response::HTTP_OK);
+  }
+
+  /**
+   * @Route(
+   *   "/api/students",
    *   name="add_student",
    *   methods={"POST"}
    * )
