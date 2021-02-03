@@ -4,6 +4,7 @@ namespace App\Controller\Grading;
 
 use App\Core\ApiError;
 use App\Core\ApiErrorException;
+use App\Services\Grading\ScoreService;
 use App\Services\Grading\StudentService;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -118,14 +119,31 @@ class StudentController extends AbstractController
    *   methods={"DELETE"}
    * )
    *
-   * @param Request $request
    * @param StudentService $studentService
    * @param int $id
    * @return Response
    */
-  public function deleteStudent(Request $request, StudentService $studentService, int $id): Response
+  public function deleteStudent(StudentService $studentService, int $id): Response
   {
     $studentService->delete($id);
     return new Response('',Response::HTTP_NO_CONTENT);
   }
+
+  /**
+   * @Route(
+   *   "/api/student/{id}/getAverage",
+   *   name="get_student_average_score",
+   *   methods={"GET"}
+   * )
+   *
+   * @param ScoreService $scoreService
+   * @param int $id
+   * @return Response
+   */
+  public function getStudentAverageScore(ScoreService $scoreService, int $id): Response
+  {
+    $result = $scoreService->calculateAverageScoreByStudent($id);
+    return new JsonResponse($result,Response::HTTP_OK);
+  }
+
 }

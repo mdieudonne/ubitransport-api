@@ -55,11 +55,11 @@ class ScoreRepository extends ServiceEntityRepository
       ->getSingleScalarResult();
   }
 
-  public function countAllByStudent(?string $idStudent) {
+  public function countAllByStudent(int $idStudent) {
     $qb = $this->createQueryBuilder('s')
       ->select('COUNT(s)');
 
-    if (!empty($idStudent)) {
+    if ($idStudent !== 0) {
       $qb->andWhere('s.student = :idStudent')
         ->setParameter('idStudent', $idStudent);
     }
@@ -68,14 +68,14 @@ class ScoreRepository extends ServiceEntityRepository
 
   }
 
-  public function findByBatchByStudent(string $limit, int $offset, ?string $idStudent)
+  public function findByBatchByStudent(string $limit, int $offset, int $idStudent)
   {
     $qb = $this->createQueryBuilder('s')
       ->select('s.id', 's.subject', 's.value')
       ->setMaxResults($limit)
       ->setFirstResult($offset);
 
-    if (!empty($idStudent)) {
+    if ($idStudent !== 0) {
       $qb->andWhere('s.student = :idStudent')
         ->setParameter('idStudent', $idStudent);
     }

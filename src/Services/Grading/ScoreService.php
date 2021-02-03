@@ -7,6 +7,8 @@ use App\Core\ApiErrorException;
 use App\Entity\Grading\Score;
 use App\Entity\Grading\Student;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ScoreService
@@ -20,7 +22,7 @@ class ScoreService
     $this->validator = $validator;
   }
 
-  public function getByPage(string $limit, string $page, string $idStudent = ''): array
+  public function getByPage(string $limit, string $page, int $idStudent): array
   {
     $totalItems = $this->em->getRepository(Score::class)->countAllByStudent($idStudent);
 
@@ -61,7 +63,6 @@ class ScoreService
     $this->em->persist($score);
     $this->em->flush();
 
-    dump($score);
     return $score;
   }
 
@@ -98,14 +99,6 @@ class ScoreService
     $this->em->flush();
   }
 
-  private function validateRequestParams(array $data): void
-  {
-    if (empty($data['value'] || empty($data['subject']))) {
-      $error = new ApiError(400, ApiError::MISSING_PARAM);
-      throw new ApiErrorException($error);
-    }
-  }
-
   public function validateScore(Score $score): void
   {
     $errors = $this->validator->validate($score);
@@ -115,6 +108,32 @@ class ScoreService
       $error = new ApiError(400, $errorsString);
       throw new ApiErrorException($error);
     }
+  }
+
+  public function calculateAverageScoreByStudent(?int $idStudent = 0): float
+  {
+    $limit = 50;
+    $offset = 0;
+    $totalItems = $this->em->getRepository(Score::class)->countAllByStudent($idStudent);
+
+    $sum = 0;
+    while ($offset < $totalItems) {
+      $scores = $this->em->getRepository(Score::class)->findByBatchByStudent($limit, $offset, $idStudent);
+
+      /** @var Score $score */
+      foreach ($scores as $score) {
+        $sum += $score['value'];
+      }
+
+      $offset += $limit;
+    }
+
+    $result = 0;
+    if ($totalItems > 0) {
+      $result = round($sum / $totalItems , 2);
+    }
+
+    return $result;
   }
 
 }

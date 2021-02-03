@@ -37,7 +37,7 @@ class ScoreController extends AbstractController
       throw new ApiErrorException($error);
     }
 
-    [$scores, $totalItems] = $scoreService->getByPage($limit, $page, $idStudent);
+    [$scores, $totalItems] = $scoreService->getByPage($limit, $page, intval($idStudent));
 
     $results = [
       'scores' => $scores,
@@ -90,7 +90,6 @@ class ScoreController extends AbstractController
    * @param ScoreService $scoreService
    * @param int $id
    * @return Response
-   * @throws Exception
    */
   public function updateScore(Request $request, ScoreService $scoreService, int $id): Response
   {
@@ -126,6 +125,23 @@ class ScoreController extends AbstractController
   {
     $scoreService->delete($id);
     return new Response('',Response::HTTP_NO_CONTENT);
+  }
+
+  /**
+   * @Route(
+   *   "/api/scores/getAverage",
+   *   name="get_average_score",
+   *   methods={"GET"}
+   * )
+   *
+   * @param Request $request
+   * @param ScoreService $scoreService
+   * @return JsonResponse
+   */
+  public function getAverageScore(Request $request, ScoreService $scoreService): JsonResponse
+  {
+    $result = $scoreService->calculateAverageScoreByStudent();
+    return new JsonResponse($result,Response::HTTP_OK);
   }
 
 }
