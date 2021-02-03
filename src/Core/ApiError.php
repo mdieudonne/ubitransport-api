@@ -13,7 +13,7 @@ class ApiError
 
   private string $statusCode;
 
-  private int $type;
+  private string $type;
 
   private string $title;
 
