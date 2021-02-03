@@ -6,15 +6,17 @@ use App\Core\ApiError;
 use App\Core\ApiErrorException;
 use App\Entity\Grading\Student;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class StudentService
 {
   private EntityManagerInterface $em;
+  private ValidatorInterface $validator;
 
-  public function __construct(EntityManagerInterface $em)
+  public function __construct(EntityManagerInterface $em, ValidatorInterface $validator)
   {
     $this->em = $em;
+    $this->validator = $validator;
   }
 
   public function getByPage(string $limit, string $page): array
@@ -41,20 +43,23 @@ class StudentService
   {
     $student = new Student();
 
-    [$birthdate] = $this->validateRequestParams($data);
+    [$birthdate] = $this->validateBirthdate($data);
 
     $student->setFirstname($data['firstname']);
     $student->setLastname($data['lastname']);
     $student->setBirthdate($birthdate);
+
+    $this->validateStudent($student);
+
     $this->em->persist($student);
     $this->em->flush();
 
     return $student;
   }
 
-  private function validateRequestParams(array $data): ?array
+  private function validateBirthdate(array $data): ?array
   {
-    if (empty($data['firstname'] || empty($data['lastname']) || empty($data['birthdate']))) {
+    if (empty($data['birthdate'])) {
       $error = new ApiError(400, ApiError::MISSING_PARAM);
       throw new ApiErrorException($error);
     }
@@ -78,22 +83,13 @@ class StudentService
       throw new ApiErrorException($error);
     }
 
-    [$birthdate] = $this->validateRequestParams($data);
+    [$birthdate] = $this->validateBirthdate($data);
 
     $student->setFirstname($data['firstname']);
     $student->setLastname($data['lastname']);
     $student->setBirthdate($birthdate);
 
-    $validator = Validation::createValidator();
-    $violations = $validator->validate($student);
-    if (count($violations) > 0) {
-      $messages = '';
-      foreach ($violations as $violation) {
-        $messages .= $violation->getMessage() . ' ';
-      }
-      $error = new ApiError(400, $messages);
-      throw new ApiErrorException($error);
-    }
+    $this->validateStudent($student);
 
     $this->em->flush();
 
@@ -110,6 +106,17 @@ class StudentService
 
     $this->em->remove($student);
     $this->em->flush();
+  }
+
+  public function validateStudent(Student $student): void
+  {
+    $errors = $this->validator->validate($student);
+
+    if (count($errors) > 0) {
+      $errorsString = (string) $errors;
+      $error = new ApiError(400, $errorsString);
+      throw new ApiErrorException($error);
+    }
   }
 
 }
