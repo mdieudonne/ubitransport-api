@@ -45,7 +45,7 @@ class StudentController extends AbstractController
       'itemsPerPage' => $limit,
     ];
 
-    $resultsSerialized = $this->get('serializer')->serialize($results, 'json');
+    $resultsSerialized = $this->get('serializer')->serialize($results, 'json', ['groups' => 'student']);
 
     $response = new Response($resultsSerialized, Response::HTTP_OK);
     $response->headers->set('Content-Type', 'application/json');
@@ -74,7 +74,7 @@ class StudentController extends AbstractController
 
     $student = $studentService->add($data);
 
-    $studentSerialized = $this->get('serializer')->serialize($student, 'json');
+    $studentSerialized = $this->get('serializer')->serialize($student, 'json', ['groups' => 'student']);
 
     $response = new Response($studentSerialized, Response::HTTP_CREATED);
     $response->headers->set('Content-Type', 'application/json');
@@ -104,7 +104,7 @@ class StudentController extends AbstractController
     }
 
     $student = $studentService->update($data, $id);
-    $studentSerialized = $this->get('serializer')->serialize($student, 'json');
+    $studentSerialized = $this->get('serializer')->serialize($student, 'json', ['groups' => 'student']);
 
     $response = new Response($studentSerialized, Response::HTTP_OK);
     $response->headers->set('Content-Type', 'application/json');

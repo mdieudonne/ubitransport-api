@@ -22,7 +22,7 @@ class StudentService
   public function getByPage(string $limit, string $page): array
   {
 
-    $totalStudents = $this->em->getRepository(Student::class)->countAll();
+    $totalItems = $this->em->getRepository(Student::class)->countAll();
 
     $offset = 0;
     if (intval($page) > 1) {
@@ -36,7 +36,7 @@ class StudentService
       throw new ApiErrorException($error);
     }
 
-    return [$students, $totalStudents];
+    return [$students, $totalItems];
   }
 
   public function add(array $data): Student

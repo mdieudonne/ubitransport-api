@@ -7,6 +7,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Student
 {
   /**
+   * @Groups({"student"})
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    * @ORM\Column(type="integer")
@@ -23,23 +25,27 @@ class Student
   private int $id;
 
   /**
+   * @Groups({"student"})
    * @ORM\Column(type="string", length=50)
    * @Assert\NotBlank
    */
   private string $lastname;
 
   /**
+   * @Groups({"student"})
    * @ORM\Column(type="string", length=50)
    * @Assert\NotBlank
    */
   private string $firstname;
 
   /**
+   * @Groups({"student"})
    * @ORM\Column(type="date")
    */
   private DateTime $birthdate;
 
   /**
+   * @Groups({"student_score"})
    * @ORM\OneToMany(targetEntity=Score::class, mappedBy="student", orphanRemoval=true)
    */
   private $scores;

@@ -56,9 +56,10 @@ class StudentRepository extends ServiceEntityRepository
   }
 
 
-  public function findByBatch($limit, $offset)
+  public function findByBatch(string $limit, int $offset)
   {
     return $this->createQueryBuilder('s')
+      ->select('s.id', 's.lastname', 's.firstname', 's.birthdate')
       ->setMaxResults($limit)
       ->setFirstResult($offset)
       ->getQuery()
