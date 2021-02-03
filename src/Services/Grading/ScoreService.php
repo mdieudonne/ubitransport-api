@@ -7,8 +7,6 @@ use App\Core\ApiErrorException;
 use App\Entity\Grading\Score;
 use App\Entity\Grading\Student;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ScoreService

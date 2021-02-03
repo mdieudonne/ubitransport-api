@@ -5,7 +5,6 @@ namespace App\Controller\Grading;
 use App\Core\ApiError;
 use App\Core\ApiErrorException;
 use App\Services\Grading\ScoreService;
-use App\Services\Grading\StudentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -116,12 +115,11 @@ class ScoreController extends AbstractController
    *   methods={"DELETE"}
    * )
    *
-   * @param Request $request
    * @param ScoreService $scoreService
    * @param int $id
    * @return Response
    */
-  public function deleteScore(Request $request, ScoreService $scoreService, int $id): Response
+  public function deleteScore(ScoreService $scoreService, int $id): Response
   {
     $scoreService->delete($id);
     return new Response('',Response::HTTP_NO_CONTENT);
@@ -134,11 +132,10 @@ class ScoreController extends AbstractController
    *   methods={"GET"}
    * )
    *
-   * @param Request $request
    * @param ScoreService $scoreService
    * @return JsonResponse
    */
-  public function getAverageScore(Request $request, ScoreService $scoreService): JsonResponse
+  public function getAverageScore(ScoreService $scoreService): JsonResponse
   {
     $result = $scoreService->calculateAverageScoreByStudent();
     return new JsonResponse($result,Response::HTTP_OK);

@@ -6,7 +6,6 @@ use App\Core\ApiError;
 use App\Core\ApiErrorException;
 use App\Services\Grading\ScoreService;
 use App\Services\Grading\StudentService;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,7 +92,6 @@ class StudentController extends AbstractController
    * @param StudentService $studentService
    * @param int $id
    * @return Response
-   * @throws Exception
    */
   public function updateStudent(Request $request, StudentService $studentService, int $id): Response
   {
