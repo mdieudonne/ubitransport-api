@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class StudentController extends AbstractController
 {
   /**
@@ -27,16 +28,24 @@ class StudentController extends AbstractController
    */
   public function getStudents(Request $request, StudentService $studentService): JsonResponse
   {
-    $data = json_decode($request->getContent(), true);
+    $page = $request->query->get('page');
+    $limit = $request->query->get('itemsPerPage');
 
-    if ($data === null) {
-      $error = new ApiError(400, ApiError::TYPE_INVALID_REQUEST_BODY_FORMAT);
+    if (!$page || !$limit) {
+      $error = new ApiError(400, ApiError::MISSING_PARAM);
       throw new ApiErrorException($error);
     }
 
-    $student = $studentService->getByPage($data);
+    [$students, $totalItems] = $studentService->getByPage($limit, $page);
 
-    return new JsonResponse($student, Response::HTTP_OK);
+    return new JsonResponse(
+      [
+        'students' => $students,
+        'totalItems' => $totalItems,
+        'page' => $page,
+        'itemsPerPage' => $limit,
+      ], Response::HTTP_OK
+    );
   }
 
   /**
@@ -48,9 +57,9 @@ class StudentController extends AbstractController
    *
    * @param Request $request
    * @param StudentService $studentService
-   * @return JsonResponse
+   * @return Response
    */
-  public function addStudent(Request $request, StudentService $studentService): JsonResponse
+  public function addStudent(Request $request, StudentService $studentService): Response
   {
     $data = json_decode($request->getContent(), true);
 
@@ -61,7 +70,9 @@ class StudentController extends AbstractController
 
     $student = $studentService->add($data);
 
-    return new JsonResponse($student, Response::HTTP_CREATED);
+    $studentSerialized = $this->get('serializer')->serialize($student, 'json');
+
+    return new Response($studentSerialized, Response::HTTP_CREATED);
   }
 
   /**
@@ -87,8 +98,9 @@ class StudentController extends AbstractController
     }
 
     $student = $studentService->update($data, $id);
+    $studentSerialized = $this->get('serializer')->serialize($student, 'json');
 
-    return new JsonResponse($student, Response::HTTP_OK);
+    return new JsonResponse($studentSerialized, Response::HTTP_OK);
   }
 
   /**

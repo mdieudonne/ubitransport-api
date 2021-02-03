@@ -4,6 +4,7 @@ namespace App\Controller\Grading;
 
 use App\Core\ApiError;
 use App\Core\ApiErrorException;
+use App\Services\Grading\ScoreService;
 use App\Services\Grading\StudentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,7 +25,7 @@ class ScoreController extends AbstractController
    * @param StudentService $studentService
    * @return JsonResponse
    */
-  public function addScore(Request $request, StudentService $studentService): JsonResponse
+  public function addScore(Request $request, ScoreService $scoreService): JsonResponse
   {
     $data = json_decode($request->getContent(), true);
 
@@ -33,9 +34,10 @@ class ScoreController extends AbstractController
       throw new ApiErrorException($error);
     }
 
-    $student = $studentService->add($data);
+    $score = $scoreService->add($data);
+    $scoreSerialized = $this->get('serializer')->serialize($score, 'json');
 
-    return new JsonResponse($student, Response::HTTP_CREATED);
+    return new JsonResponse($scoreSerialized, Response::HTTP_CREATED);
   }
 
 }

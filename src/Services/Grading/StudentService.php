@@ -16,26 +16,24 @@ class StudentService
     $this->em = $em;
   }
 
-  public function getByPage(array $data): array
+  public function getByPage(string $limit, string $page): array
   {
 
     $totalStudents = $this->em->getRepository(Student::class)->countAll();
-    $limit = $data['itemsPerPage'];
-    $page = $data['page'];
+
     $offset = 0;
+    if (intval($page) > 1) {
+      $offset = (intval($page) - 1) * intval ($limit);
+    }
 
     $students = $this->em->getRepository(Student::class)->findByBatch($limit, $offset);
 
-    if (empty($student)) {
+    if (empty($students)) {
       $error = new ApiError(422, ApiError::PAGE_NOT_FOUND);
       throw new ApiErrorException($error);
     }
 
-    return [
-      'totalStudents' => $totalStudents,
-      'page' => $page,
-      'itemsPerPage' => $limit,
-    ];
+    return [$students, $totalStudents];
   }
 
   public function add(array $data): Student

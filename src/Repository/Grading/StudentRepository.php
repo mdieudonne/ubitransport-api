@@ -62,6 +62,6 @@ class StudentRepository extends ServiceEntityRepository
       ->setMaxResults($limit)
       ->setFirstResult($offset)
       ->getQuery()
-      ->getResult();
+      ->getArrayResult();
   }
 }
