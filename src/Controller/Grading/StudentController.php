@@ -76,7 +76,9 @@ class StudentController extends AbstractController
 
     $studentSerialized = $this->get('serializer')->serialize($student, 'json');
 
-    return new Response($studentSerialized, Response::HTTP_CREATED);
+    $response = new Response($studentSerialized, Response::HTTP_CREATED);
+    $response->headers->set('Content-Type', 'application/json');
+    return $response;
   }
 
   /**
@@ -89,10 +91,10 @@ class StudentController extends AbstractController
    * @param Request $request
    * @param StudentService $studentService
    * @param int $id
-   * @return JsonResponse
+   * @return Response
    * @throws Exception
    */
-  public function updateStudent(Request $request, StudentService $studentService, int $id): JsonResponse
+  public function updateStudent(Request $request, StudentService $studentService, int $id): Response
   {
     $data = json_decode($request->getContent(), true);
 
@@ -104,7 +106,9 @@ class StudentController extends AbstractController
     $student = $studentService->update($data, $id);
     $studentSerialized = $this->get('serializer')->serialize($student, 'json');
 
-    return new JsonResponse($studentSerialized, Response::HTTP_OK);
+    $response = new Response($studentSerialized, Response::HTTP_OK);
+    $response->headers->set('Content-Type', 'application/json');
+    return $response;
   }
 
   /**
@@ -122,10 +126,6 @@ class StudentController extends AbstractController
   public function deleteStudent(Request $request, StudentService $studentService, int $id): Response
   {
     $studentService->delete($id);
-
-    $response = new Response();
-    $response->setStatusCode(Response::HTTP_NO_CONTENT);
-
-    return $response;
+    return new Response('',Response::HTTP_NO_CONTENT);
   }
 }
