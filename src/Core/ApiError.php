@@ -22,24 +22,24 @@ class ApiError
     $this->statusCode = $statusCode;
     $this->type = $type;
 
-    if (!isset(self::$titles[$type])) {
-      throw new \InvalidArgumentException('No title for type '.$type);
+    if (isset(self::$titles[$type])) {
+      $this->title = self::$titles[$type];
     } elseif(!empty($type)) {
       $this->title = $type;
     } else {
-      $this->title = self::$titles[$type];
+      throw new \InvalidArgumentException('No title for type '.$type);
     }
 
   }
 
-  static private $titles = array(
+  static private array $titles = [
     self::TYPE_VALIDATION_ERROR => 'There was a validation error',
     self::TYPE_INVALID_REQUEST_BODY_FORMAT => 'Invalid JSON format sent',
     self::RESOURCE_NOT_FOUND => 'Resource not found',
     self::INVALID_DATETIME => 'Invalid date-time, expected format YYYY-MM-DD',
     self::MISSING_PARAM => 'Missing mandatory parameter',
     self::PAGE_NOT_FOUND => 'Page not found',
-  );
+  ];
 
   public function getStatusCode(): string
   {
