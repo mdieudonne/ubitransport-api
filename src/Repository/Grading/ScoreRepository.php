@@ -47,4 +47,39 @@ class ScoreRepository extends ServiceEntityRepository
         ;
     }
     */
+
+  public function countAll() {
+    return $this->createQueryBuilder('s')
+      ->select('COUNT(s)')
+      ->getQuery()
+      ->getSingleScalarResult();
+  }
+
+  public function countAllByStudent(?string $idStudent) {
+    $qb = $this->createQueryBuilder('s')
+      ->select('COUNT(s)');
+
+    if (!empty($idStudent)) {
+      $qb->andWhere('s.student = :idStudent')
+        ->setParameter('idStudent', $idStudent);
+    }
+
+    return $qb->getQuery()->getSingleScalarResult();
+
+  }
+
+  public function findByBatchByStudent(string $limit, int $offset, ?string $idStudent)
+  {
+    $qb = $this->createQueryBuilder('s')
+      ->select('s.id', 's.subject', 's.value')
+      ->setMaxResults($limit)
+      ->setFirstResult($offset);
+
+    if (!empty($idStudent)) {
+      $qb->andWhere('s.student = :idStudent')
+        ->setParameter('idStudent', $idStudent);
+    }
+
+    return $qb->getQuery()->getResult();
+  }
 }

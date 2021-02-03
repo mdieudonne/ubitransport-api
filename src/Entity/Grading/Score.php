@@ -4,6 +4,7 @@ namespace App\Entity\Grading;
 
 use App\Repository\Grading\ScoreRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,6 +17,7 @@ class Score
   const MAX_VALUE = 20;
 
   /**
+   * @Groups({"score"})
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    * @ORM\Column(type="integer")
@@ -23,6 +25,7 @@ class Score
   private int $id;
 
   /**
+   * @Groups({"score"})
    * @ORM\Column(type="float")
    * @Assert\Range(
    *   min = self::MIN_VALUE,
@@ -32,12 +35,14 @@ class Score
   private float $value;
 
   /**
+   * @Groups({"score"})
    * @ORM\Column(type="string", length=50)
    * @Assert\NotBlank
    */
   private string $subject;
 
   /**
+   * @Groups({"score_student"})
    * @ORM\ManyToOne(targetEntity=Student::class, inversedBy="scores")
    * @ORM\JoinColumn(nullable=false)
    */
