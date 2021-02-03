@@ -32,7 +32,8 @@ class Score
   private float $value;
 
   /**
-   * @ORM\Column(type="string", length=255)
+   * @ORM\Column(type="string", length=50)
+   * @Assert\NotBlank
    */
   private string $subject;
 

@@ -6,6 +6,7 @@ use App\Core\ApiError;
 use App\Core\ApiErrorException;
 use App\Entity\Grading\Student;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Validation;
 
 class StudentService
 {
@@ -82,6 +83,18 @@ class StudentService
     $student->setFirstname($data['firstname']);
     $student->setLastname($data['lastname']);
     $student->setBirthdate($birthdate);
+
+    $validator = Validation::createValidator();
+    $violations = $validator->validate($student);
+    if (count($violations) > 0) {
+      $messages = '';
+      foreach ($violations as $violation) {
+        $messages .= $violation->getMessage() . ' ';
+      }
+      $error = new ApiError(400, $messages);
+      throw new ApiErrorException($error);
+    }
+
     $this->em->flush();
 
     return $student;

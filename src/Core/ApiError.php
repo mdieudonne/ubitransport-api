@@ -24,9 +24,12 @@ class ApiError
 
     if (!isset(self::$titles[$type])) {
       throw new \InvalidArgumentException('No title for type '.$type);
+    } elseif(!empty($type)) {
+      $this->title = $type;
+    } else {
+      $this->title = self::$titles[$type];
     }
 
-    $this->title = self::$titles[$type];
   }
 
   static private $titles = array(
