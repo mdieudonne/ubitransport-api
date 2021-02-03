@@ -24,9 +24,9 @@ class StudentController extends AbstractController
    *
    * @param Request $request
    * @param StudentService $studentService
-   * @return JsonResponse
+   * @return Response
    */
-  public function getStudents(Request $request, StudentService $studentService): JsonResponse
+  public function getStudents(Request $request, StudentService $studentService): Response
   {
     $page = $request->query->get('page');
     $limit = $request->query->get('itemsPerPage');
@@ -38,14 +38,18 @@ class StudentController extends AbstractController
 
     [$students, $totalItems] = $studentService->getByPage($limit, $page);
 
-    return new JsonResponse(
-      [
-        'students' => $students,
-        'totalItems' => $totalItems,
-        'page' => $page,
-        'itemsPerPage' => $limit,
-      ], Response::HTTP_OK
-    );
+    $results = [
+      'students' => $students,
+      'totalItems' => $totalItems,
+      'page' => $page,
+      'itemsPerPage' => $limit,
+    ];
+
+    $resultsSerialized = $this->get('serializer')->serialize($results, 'json');
+
+    $response = new Response($resultsSerialized, Response::HTTP_OK);
+    $response->headers->set('Content-Type', 'application/json');
+    return $response;
   }
 
   /**
