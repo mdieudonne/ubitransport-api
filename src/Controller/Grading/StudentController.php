@@ -129,7 +129,7 @@ class StudentController extends AbstractController
 
   /**
    * @Route(
-   *   "/api/student/{id}/getAverage",
+   *   "/api/students/{id}/getAverage",
    *   name="get_student_average_score",
    *   methods={"GET"}
    * )
