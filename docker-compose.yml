@@ -1,26 +1,59 @@
 version: '3'
 
 services:
-  postgres:
-    image: postgres:13-alpine
-    container_name: ${DB_USER}_postgres_container
-    ports:
-      - "5432:5432"
+  database:
+    build:
+      context: ./docker/database
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_USER}_pass
-      POSTGRES_MULTIPLE_DATABASES: ${DB_USER},${DB_USER}_test
-
-  pgAdmin:
-    image: dpage/pgadmin4
+      - MYSQL_DATABASE=${DB_USER}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_USER}_pass
     ports:
-      - "8000:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: 1234
+      - "3306:3306"
     volumes:
-      - pgadmin:/var/lib/pgadmin
+      #- ./docker/database/init.sql:-entrypoint-initdb.d/init.sql
+      - ./docker/database/data:/var/lib/mysql
 
-volumes:
-  pgvol:
-  pgadmin:
+  database_test:
+    build:
+      context: ./docker/database_test
+    environment:
+      - MYSQL_DATABASE=${DB_USER}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_USER}_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      #- ./docker/database/init.sql:-entrypoint-initdb.d/init.sql
+      - ./docker/database_test/data:/var/lib/mysql
+
+  php-fpm:
+    build:
+      dockerfile: ./docker/php-fpm/Dockerfile
+      context: .
+    depends_on:
+      - database
+    environment:
+      - APP_ENV=${APP_ENV}
+      - APP_SECRET=${APP_SECRET}
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - .:/var/www
+
+  nginx:
+    build:
+      dockerfile: ./docker/nginx/Dockerfile
+      context: .
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/sites/:/etc/nginx/sites-available
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d
+      - ./docker/logs:/var/log
+    depends_on:
+      - php-fpm
+    ports:
+      - "80:80"
+      - "443:443"

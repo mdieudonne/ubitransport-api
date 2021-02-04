@@ -1,33 +1,36 @@
 # ubi-transport-api
 ##Installation
+Prerequisite:
+Docker Compose
+`apt-get install docker docker-compose`
+
 Clone the project and navigate to the project folder
 
 `cd ubitransport-api;`
 
 Run
-
-`composer install;`
-
-Run
-
+`docker-compose build`
 `docker-compose up -d`
-and wait until containers are started
 
-Then run:
-```php bin/console doctrine:database:create --if-not-exists;
-php bin/console doctrine:database:create --env=test --if-not-exists;
+Then, run
 
-php bin/console doctrine:schema:update --force;
-php bin/console doctrine:schema:update --force --env=test;
+```
+docker-compose run composer install;
 
-php bin/console doctrine:fixtures:load --no-interaction;
-php bin/console doctrine:fixtures:load --no-interaction --env=t
+docker-compose run php bin/console doctrine:database:create --if-not-exists;
+docker-compose run php bin/console doctrine:database:create --env=test --if-not-exists;
+
+docker-compose run php bin/console doctrine:schema:update --force;
+docker-compose run php bin/console doctrine:schema:update --force --env=test;
+
+docker-compose run php bin/console doctrine:fixtures:load --no-interaction;
+docker-compose run php bin/console doctrine:fixtures:load --no-interaction --env=t
 est;
 ```
 
 ##Testing
 Run
-`php bin/phpunit;`
+`docker-compose run php bin/phpunit;`
 
 ## Usage
 Use the dedicated Vue.js app ubitransport-app

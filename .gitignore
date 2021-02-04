@@ -16,3 +16,7 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+/docker/database/data/
+/docker/database_test/data/
+/docker/logs/nginx/
