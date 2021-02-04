@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class StudentTest extends WebTestCase
 {
+  private static ?int $id = null;
 
   public function testAdd()
   {
@@ -27,7 +28,14 @@ class StudentTest extends WebTestCase
       json_encode($payload)
     );
 
-    $this->assertJsonResponse($client->getResponse(), 201);
+    $response = $client->getResponse();
+
+    $this->assertEquals(201, $response->getStatusCode());
+    $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), $response->headers);
+    $this->assertJson($response->getContent());
+
+    $data = json_decode($response->getContent(), true);
+    self::$id = $data['id'];
   }
 
   public function testUpdate()
@@ -42,35 +50,26 @@ class StudentTest extends WebTestCase
 
     $client->request(
       'PUT',
-      'api/students/70',
+      'api/students/' . self::$id,
       [],
       [],
       ['CONTENT_TYPE' => 'application/json'],
       json_encode($payload)
     );
 
-    $this->assertJsonResponse($client->getResponse());
+    $response = $client->getResponse();
+
+    $this->assertEquals(200, $response->getStatusCode());
+    $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), $response->headers);
+    $this->assertJson($response->getContent());
   }
 
   public function testDelete()
   {
     $client = self::createClient();
 
-    $client->request('DELETE', 'api/students/1');
+    $client->request('DELETE', 'api/students/' . self::$id);
 
     $this->assertEquals(204, $client->getResponse()->getStatusCode());
   }
-
-  protected function assertJsonResponse($response, $statusCode = 200)
-  {
-    $this->assertEquals(
-      $statusCode, $response->getStatusCode(),
-      $response->getContent()
-    );
-    $this->assertTrue(
-      $response->headers->contains('Content-Type', 'application/json'),
-      $response->headers
-    );
-  }
-
 }
