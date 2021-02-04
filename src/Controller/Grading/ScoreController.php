@@ -45,10 +45,11 @@ class ScoreController extends AbstractController
       'itemsPerPage' => $limit,
     ];
 
-    $resultsSerialized = $this->get('serializer')->serialize($results, 'json',  ['groups' => 'score']);
+    $resultsSerialized = $this->get('serializer')->serialize($results, 'json', ['groups' => 'score']);
 
     $response = new Response($resultsSerialized, Response::HTTP_OK);
     $response->headers->set('Content-Type', 'application/json');
+
     return $response;
   }
 
@@ -75,7 +76,10 @@ class ScoreController extends AbstractController
     $score = $scoreService->add($data);
     $scoreSerialized = $this->get('serializer')->serialize($score, 'json', ['groups' => 'score']);
 
-    return new Response($scoreSerialized, Response::HTTP_CREATED);
+    $response = new Response($scoreSerialized, Response::HTTP_CREATED);
+    $response->headers->set('Content-Type', 'application/json');
+
+    return $response;
   }
 
   /**
@@ -104,6 +108,7 @@ class ScoreController extends AbstractController
 
     $response = new Response($scoreSerialized, Response::HTTP_OK);
     $response->headers->set('Content-Type', 'application/json');
+
     return $response;
   }
 
@@ -122,7 +127,8 @@ class ScoreController extends AbstractController
   public function deleteScore(ScoreService $scoreService, int $id): Response
   {
     $scoreService->delete($id);
-    return new Response('',Response::HTTP_NO_CONTENT);
+
+    return new Response('', Response::HTTP_NO_CONTENT);
   }
 
   /**
@@ -138,7 +144,8 @@ class ScoreController extends AbstractController
   public function getAverageScore(ScoreService $scoreService): JsonResponse
   {
     $result = $scoreService->calculateAverageScoreByStudent();
-    return new JsonResponse($result,Response::HTTP_OK);
+
+    return new JsonResponse($result, Response::HTTP_OK);
   }
 
 }
