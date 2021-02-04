@@ -21,6 +21,8 @@ php bin/console doctrine:schema:update --force;
 php bin/console doctrine:schema:update --force --env=test;
 
 php bin/console doctrine:fixtures:load --no-interaction;
+php bin/console doctrine:fixtures:load --no-interaction --env=t
+est;
 ```
 
 ##Testing
