@@ -49,6 +49,7 @@ class StudentController extends AbstractController
 
     $response = new Response($resultsSerialized, Response::HTTP_OK);
     $response->headers->set('Content-Type', 'application/json');
+
     return $response;
   }
 
@@ -78,6 +79,7 @@ class StudentController extends AbstractController
 
     $response = new Response($studentSerialized, Response::HTTP_CREATED);
     $response->headers->set('Content-Type', 'application/json');
+
     return $response;
   }
 
@@ -107,6 +109,7 @@ class StudentController extends AbstractController
 
     $response = new Response($studentSerialized, Response::HTTP_OK);
     $response->headers->set('Content-Type', 'application/json');
+
     return $response;
   }
 
@@ -124,7 +127,8 @@ class StudentController extends AbstractController
   public function deleteStudent(StudentService $studentService, int $id): Response
   {
     $studentService->delete($id);
-    return new Response('',Response::HTTP_NO_CONTENT);
+
+    return new Response('', Response::HTTP_NO_CONTENT);
   }
 
   /**
@@ -141,7 +145,8 @@ class StudentController extends AbstractController
   public function getStudentAverageScore(ScoreService $scoreService, int $id): Response
   {
     $result = $scoreService->calculateAverageScoreByStudent($id);
-    return new JsonResponse($result,Response::HTTP_OK);
+
+    return new JsonResponse($result, Response::HTTP_OK);
   }
 
 }
