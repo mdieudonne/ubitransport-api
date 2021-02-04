@@ -9,7 +9,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ScoreRepository::class)
- * @ORM\Table(name="score",schema="grading")
  */
 class Score
 {
@@ -19,7 +18,7 @@ class Score
   /**
    * @Groups({"score"})
    * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
+   * @ORM\GeneratedValue()
    * @ORM\Column(type="integer")
    */
   private int $id;

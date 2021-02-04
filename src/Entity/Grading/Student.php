@@ -12,14 +12,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=StudentRepository::class)
- * @ORM\Table(name="student",schema="grading")
  */
 class Student
 {
   /**
    * @Groups({"student"})
    * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
+   * @ORM\GeneratedValue()
    * @ORM\Column(type="integer")
    */
   private int $id;
