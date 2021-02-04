@@ -3,6 +3,8 @@
 
 namespace App\Tests\Api;
 
+use App\Entity\Grading\Student;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class StudentTest extends WebTestCase
@@ -36,6 +38,8 @@ class StudentTest extends WebTestCase
 
     $data = json_decode($response->getContent(), true);
     self::$id = $data['id'];
+
+    return $data['id'];
   }
 
   public function testUpdate()
@@ -71,5 +75,31 @@ class StudentTest extends WebTestCase
     $client->request('DELETE', 'api/students/' . self::$id);
 
     $this->assertEquals(204, $client->getResponse()->getStatusCode());
+  }
+
+  public function testAverageByStudent()
+  {
+    $client = self::createClient();
+    $container = $client->getContainer();
+    /** @var EntityManager $em */
+    $em = $container->get('doctrine.orm.entity_manager');
+
+    /** @var Student $student */
+    $student = $em->getRepository(Student::class)->findOneBy([
+      'lastname' => 'Casey'
+    ]);
+
+    $client->request('GET', 'api/students/'. $student->getId() . '/getAverage');
+
+    $response = $client->getResponse();
+
+    var_dump($response);
+
+    $this->assertEquals(200, $response->getStatusCode());
+    $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), $response->headers);
+    $this->assertJson($response->getContent());
+
+    $studentAverage = json_decode($response->getContent(), true);
+    $this->assertEquals(15, $studentAverage);
   }
 }
