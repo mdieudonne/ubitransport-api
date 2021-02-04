@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use OpenApi\Annotations as OA;
 
 class StudentController extends AbstractController
 {
@@ -21,6 +21,24 @@ class StudentController extends AbstractController
    *   name="get_students",
    *   methods={"GET"}
    * )
+   *
+   * @OA\Response(
+   *     response=200,
+   *     description="Returns the array of Students"
+   * )
+   * @OA\Parameter(
+   *     name="page",
+   *     in="query",
+   *     description="Page",
+   *     @OA\Schema(type="string")
+   * )
+   * @OA\Parameter(
+   *     name="itemsPerPage",
+   *     in="query",
+   *     description="Items per page",
+   *     @OA\Schema(type="string")
+   * )
+   * @OA\Tag(name="students")
    *
    * @param Request $request
    * @param StudentService $studentService
@@ -59,6 +77,29 @@ class StudentController extends AbstractController
    *   name="add_student",
    *   methods={"POST"}
    * )
+   * @OA\Response(
+   *     response=201,
+   *     description="Return the created Student"
+   * )
+   * @OA\Parameter(
+   *     name="lastname",
+   *     in="query",
+   *     description="Lastname",
+   *     @OA\Schema(type="string")
+   * )
+   * @OA\Parameter(
+   *     name="firstname",
+   *     in="query",
+   *     description="Firstname",
+   *     @OA\Schema(type="string")
+   * )
+   * @OA\Parameter(
+   *     name="birthdate",
+   *     in="query",
+   *     description="Birthdate ('Y-m-d')",
+   *     @OA\Schema(type="string")
+   * )
+   * @OA\Tag(name="students")
    *
    * @param Request $request
    * @param StudentService $studentService
@@ -90,6 +131,36 @@ class StudentController extends AbstractController
    *   methods={"PUT"}
    * )
    *
+   * @OA\Response(
+   *     response=200,
+   *     description="Return the updated Student"
+   * )
+   * @OA\Parameter(
+   *     name="id",
+   *     in="path",
+   *     description="Id of the Student to update",
+   *     @OA\Schema(type="integer")
+   * )
+   * @OA\Parameter(
+   *     name="lastname",
+   *     in="query",
+   *     description="Lastname",
+   *     @OA\Schema(type="string")
+   * )
+   * @OA\Parameter(
+   *     name="firstname",
+   *     in="query",
+   *     description="Firstname",
+   *     @OA\Schema(type="string")
+   * )
+   * @OA\Parameter(
+   *     name="birthdate",
+   *     in="query",
+   *     description="Birthdate ('Y-m-d')",
+   *     @OA\Schema(type="string")
+   * )
+   * @OA\Tag(name="students")
+   *
    * @param Request $request
    * @param StudentService $studentService
    * @param int $id
@@ -120,6 +191,18 @@ class StudentController extends AbstractController
    *   methods={"DELETE"}
    * )
    *
+   * @OA\Response(
+   *     response=204,
+   *     description="",
+   * )
+   * @OA\Parameter(
+   *     name="id",
+   *     in="path",
+   *     description="Id of the Student to delete",
+   *     @OA\Schema(type="integer")
+   * )
+   * @OA\Tag(name="students")
+   *
    * @param StudentService $studentService
    * @param int $id
    * @return Response
@@ -137,6 +220,19 @@ class StudentController extends AbstractController
    *   name="get_student_average_score",
    *   methods={"GET"}
    * )
+   *
+   * @OA\Response(
+   *     response=200,
+   *     description="Returns the average score of the Student",
+   * )
+   *
+   * @OA\Parameter(
+   *     name="id",
+   *     in="path",
+   *     description="Id of the Student to get the average",
+   *     @OA\Schema(type="integer")
+   * )
+   * @OA\Tag(name="students")
    *
    * @param ScoreService $scoreService
    * @param int $id

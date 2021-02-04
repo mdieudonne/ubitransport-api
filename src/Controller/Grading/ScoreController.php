@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use OpenApi\Annotations as OA;
 
 class ScoreController extends AbstractController
 {
@@ -20,6 +21,30 @@ class ScoreController extends AbstractController
    *   name="get_scores",
    *   methods={"GET"}
    * )
+   *
+   * @OA\Response(
+   *     response=200,
+   *     description="Returns the array of Scores of the Student"
+   * )
+   * @OA\Parameter(
+   *     name="page",
+   *     in="query",
+   *     description="Page",
+   *     @OA\Schema(type="string")
+   * )
+   * @OA\Parameter(
+   *     name="itemsPerPage",
+   *     in="query",
+   *     description="Items per page",
+   *     @OA\Schema(type="string")
+   * )
+   * @OA\Parameter(
+   *     name="idStudent",
+   *     in="query",
+   *     description="Id of the Student",
+   *     @OA\Schema(type="integer")
+   * )
+   * @OA\Tag(name="scores")
    *
    * @param Request $request
    * @param ScoreService $scoreService
@@ -60,6 +85,24 @@ class ScoreController extends AbstractController
    *   methods={"POST"}
    * )
    *
+   * @OA\Response(
+   *     response=201,
+   *     description="Return the created Score"
+   * )
+   * @OA\Parameter(
+   *     name="subject",
+   *     in="query",
+   *     description="Subject",
+   *     @OA\Schema(type="string")
+   * )
+   * @OA\Parameter(
+   *     name="value",
+   *     in="query",
+   *     description="Score",
+   *     @OA\Schema(type="float")
+   * )
+   * @OA\Tag(name="scores")
+   *
    * @param Request $request
    * @param ScoreService $scoreService
    * @return Response
@@ -88,6 +131,30 @@ class ScoreController extends AbstractController
    *   name="update_score",
    *   methods={"PUT"}
    * )
+   *
+   * @OA\Response(
+   *     response=200,
+   *     description="Return the updated Score"
+   * )
+   * @OA\Parameter(
+   *     name="id",
+   *     in="path",
+   *     description="Id of the Score to update",
+   *     @OA\Schema(type="integer")
+   * )
+   * @OA\Parameter(
+   *     name="subject",
+   *     in="query",
+   *     description="Subject",
+   *     @OA\Schema(type="string")
+   * )
+   * @OA\Parameter(
+   *     name="value",
+   *     in="query",
+   *     description="Score",
+   *     @OA\Schema(type="float")
+   * )
+   * @OA\Tag(name="scores")
    *
    * @param Request $request
    * @param ScoreService $scoreService
@@ -120,6 +187,18 @@ class ScoreController extends AbstractController
    *   methods={"DELETE"}
    * )
    *
+   * @OA\Response(
+   *     response=204,
+   *     description="",
+   * )
+   * @OA\Parameter(
+   *     name="id",
+   *     in="path",
+   *     description="Id of the Score to delete",
+   *     @OA\Schema(type="integer")
+   * )
+   * @OA\Tag(name="scores")
+   *
    * @param ScoreService $scoreService
    * @param int $id
    * @return Response
@@ -137,6 +216,12 @@ class ScoreController extends AbstractController
    *   name="get_average_score",
    *   methods={"GET"}
    * )
+   *
+   * @OA\Response(
+   *     response=200,
+   *     description="Returns the average score",
+   * )
+   * @OA\Tag(name="scores")
    *
    * @param ScoreService $scoreService
    * @return JsonResponse

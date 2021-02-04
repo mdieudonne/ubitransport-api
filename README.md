@@ -34,3 +34,6 @@ Use the dedicated Vue.js app ubitransport-app
 
 Or Postman to test the routes
 
+A documentation of the routes can be found at: api/doc
+
+The document is partial, it describes routes, expected params only and return codes with a quick description only. To be continued.
