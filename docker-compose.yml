@@ -8,18 +8,8 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_USER}pass
-      POSTGRES_DB: ${DB_USER}
-
-  postgres_test:
-    image: postgres:13-alpine
-    container_name: ${DB_USER}_postgres_container_test
-    ports:
-      - "5433:5432"
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_USER}pass
-      POSTGRES_DB: ${DB_USER}test
+      POSTGRES_PASSWORD: ${DB_USER}_pass
+      POSTGRES_MULTIPLE_DATABASES: ${DB_USER},${DB_USER}_test
 
   pgAdmin:
     image: dpage/pgadmin4
