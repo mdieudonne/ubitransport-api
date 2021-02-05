@@ -20,3 +20,8 @@
 /docker/database/data/
 /docker/database_test/data/
 /docker/logs/nginx/
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
