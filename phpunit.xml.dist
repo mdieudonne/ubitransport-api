@@ -15,9 +15,10 @@
         <server name="SYMFONY_PHPUNIT_VERSION" value="8.5" />
     </php>
 
-    <php>
-        <env name="API_KEY" value="fakeApiKey" force="true" />
-    </php>
+<!--    <php>-->
+<!--        &lt;!&ndash; the value is the Doctrine connection string in DSN format &ndash;&gt;-->
+<!--        <env name="DATABASE_URL" value="mysql://ubitransport:ubitransport_pass@ubitransport_test:3307/ubitransport_test?serverVersion=5.7E" />-->
+<!--    </php>-->
 
     <testsuites>
         <testsuite name="Project Test Suite">

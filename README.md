@@ -1,25 +1,25 @@
 # ubi-transport-api
 ##Installation
-Prerequisite:
-sudo apt install make
-
 Clone the project and navigate to the project folder
-`docker-compose up -build`
+
 `cd ubitransport-api;`
 
-Run
-`docker-compose
-`make install`
+Install Make if not installed yet
+
+`sudo apt install make`
+
+Run `make start` to start docker containers
+
+Run `make install` to install dependencies, create database, update schema and load fixtures.
 
 ##Testing
-Run
-`make install`
+Run `make test`
+
+_Note that it will reset current dev database as it is using same docker containers._
 
 ## Usage
-Use the dedicated Vue.js app ubitransport-app
-
+**Use the dedicated Vue.js app ubitransport-app**
 Or Postman to test the routes
 
-A documentation of the routes can be found at: api/doc
-
-The document is partial, it describes routes, expected params only and return codes with a quick description only. To be continued.
+## API Documentation
+Documentation can be found at: localhost/api/doc
