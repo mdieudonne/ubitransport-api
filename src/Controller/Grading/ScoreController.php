@@ -2,6 +2,7 @@
 
 namespace App\Controller\Grading;
 
+use App\Entity\Grading\Score;
 use App\Core\ApiError;
 use App\Core\ApiErrorException;
 use App\Services\Grading\ScoreService;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 class ScoreController extends AbstractController
 {
@@ -24,7 +26,11 @@ class ScoreController extends AbstractController
    *
    * @OA\Response(
    *     response=200,
-   *     description="Returns the array of Scores of the Student"
+   *     description="Returns the array of Scores of the Student",
+   *     @OA\JsonContent(
+   *        type="array",
+   *        @OA\Items(ref=@Model(type=Score::class, groups={"score"}))
+   *     )
    * )
    * @OA\Parameter(
    *     name="page",
@@ -87,7 +93,8 @@ class ScoreController extends AbstractController
    *
    * @OA\Response(
    *     response=201,
-   *     description="Return the created Score"
+   *     description="Return the created Score",
+   *     @Model(type=Score::class, groups={"score"})
    * )
    * @OA\Parameter(
    *     name="subject",
@@ -134,7 +141,8 @@ class ScoreController extends AbstractController
    *
    * @OA\Response(
    *     response=200,
-   *     description="Return the updated Score"
+   *     description="Return the updated Score",
+   *     @Model(type=Score::class, groups={"score"})
    * )
    * @OA\Parameter(
    *     name="id",
