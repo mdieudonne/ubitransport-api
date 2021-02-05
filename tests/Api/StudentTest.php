@@ -93,8 +93,6 @@ class StudentTest extends WebTestCase
 
     $response = $client->getResponse();
 
-    var_dump($response);
-
     $this->assertEquals(200, $response->getStatusCode());
     $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), $response->headers);
     $this->assertJson($response->getContent());
